@@ -8,7 +8,7 @@
 import Foundation
 
 class RoundedTaskViewModelImpl: RoundedTaskViewModel {
-    
+    @Published var id: UUID
     @Published var taskName: String
     @Published var taskPriority: TaskPriority
     @Published var taskStatus: TaskStatus
@@ -17,10 +17,16 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
 
     
     init(from task: Task) {
+        id = task.id
         taskName = task.name
         taskPriority = task.priority
         taskStatus = task.status
-        tillTime = task.tillDate.timeIntervalSince1970.description
-        tillDate = task.tillDate.description
+        tillTime = CustomFormatters.dateTime.string(from: task.tillDate)
+        tillDate = CustomFormatters.date.string(from: task.tillDate)
     }
+}
+
+
+extension RoundedTaskViewModelImpl {
+    static var mock = RoundedTaskViewModelImpl(from: Task.sapmle)
 }

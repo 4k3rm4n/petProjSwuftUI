@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-protocol RoundedTaskViewModel: ObservableObject {
+protocol RoundedTaskViewModel: ObservableObject, Identifiable {
+    var id: UUID { get }
     var taskName: String { get }
     var taskPriority: TaskPriority { get }
     var taskStatus: TaskStatus { get set }
@@ -20,12 +21,11 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
     
     var body: some View {
         ZStack {
-            Color.blue
-                .opacity(0.2)
+            Color.white
             
             VStack {
                 HStack {
-                    Label("Task priority", systemImage: "flag")
+                    Label(viewModel.taskPriority.title(), systemImage: "flag")
                         .font(.system(size: 12))
                         .foregroundStyle(.white)
                         .labelStyle(TitleAndIconLabelStyle())
@@ -35,15 +35,15 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 11)
-                .background(Color.red) // priority colors
+                .background(viewModel.taskPriority.color()) // priority colors
                 
                 HStack {
                     Image(systemName: "circle.fill")
                         .resizable()
                         .frame(width: 18, height: 18)
-                        .foregroundStyle(.red) //task Status
+                        .foregroundStyle(viewModel.taskPriority.color()) //task Status
                     
-                    Text("Task name")
+                    Text(viewModel.taskName)
                         .font(.system(size: 16, weight: .medium))
                     
                     Spacer()
@@ -55,13 +55,13 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
                     .padding(.horizontal, 16)
                 
                 HStack {
-                    Label("08:30 PM", systemImage: "alarm") // Till Time
+                    Label(viewModel.tillTime, systemImage: "alarm") // Till Time
                         .font(.system(size: 12))
                         .foregroundStyle(.red) //
                     
                     Spacer()
                     
-                    Text("Mon, 19 Jul 2022") // Till Date
+                    Text(viewModel.tillDate) // Till Date
                         .font(.system(size: 12))
                         .foregroundStyle(.gray)
                 }
@@ -73,9 +73,11 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
         }
         .fixedSize(horizontal: false, vertical: true)
         .cornerRadius(8)
+        .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 0)
+        .padding(.horizontal, 10)
     }
 }
 
 #Preview {
-    RoundedTaskView()
+    RoundedTaskView(viewModel: RoundedTaskViewModelImpl.mock)
 }

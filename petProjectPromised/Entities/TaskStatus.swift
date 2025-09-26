@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TaskStatus {
+enum TaskStatus: Codable {
     case active
     case completed
 }
