@@ -13,8 +13,12 @@ protocol HomeScreenViewModel: ObservableObject {
     
     func getTasksViewModels() -> [RoundedTaskViewModelImpl]
 }
+
+
 struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
     @ObservedObject var viewModel: ViewModel
+    
+    @State private var showAddTaskSheet: Bool = false
     
     var body: some View {
         ZStack {
@@ -38,12 +42,16 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                     Spacer()
                     
                     MainRoundedButton() {
-                        
+                        showAddTaskSheet = true
                     }
                 }
                 .padding(.trailing, 24)
                 .padding(.bottom, 44)
             }
+        }
+        .sheet(isPresented: $showAddTaskSheet) {
+            AddTaskView(viewModel: AddTaskViewModelImpl())
+                .presentationDetents([.medium])
         }
     }
     

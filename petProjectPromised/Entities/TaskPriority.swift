@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum TaskPriority: Int, Codable {
+enum TaskPriority: Int, Codable, CaseIterable, Hashable {
     case low = 1
     case medium
     case high
@@ -26,11 +26,11 @@ enum TaskPriority: Int, Codable {
     func title() -> String {
         switch self {
         case .low:
-            return "Low priority"
+            return "Low"
         case .medium:
-            return "Medium priority"
+            return "Medium"
         case .high:
-            return "High priority"
+            return "High"
         }
     }
 }
