@@ -16,36 +16,43 @@ protocol AddTaskViewModel: ObservableObject {
 struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel{
     @ObservedObject var viewModel: ViewModel
     
-    @Environment(\.dismiss) var dismiss
-    
     var body: some View {
-        VStack(spacing: 16) {
-            TextField("Task Name", text: $viewModel.taskNameText)
-                .background(Color(.white))
-                .cornerRadius(8)
-            
-            TextField("Description", text: $viewModel.taskDescriptionText)
-                .background(Color(.white))
-                .cornerRadius(8)
-            
-            Divider()
-            
-            HStack {
-                PriorityPickerView(selectedPriority: $viewModel.selectedPriority)
+            ZStack {
+                Color.white
                 
-                Spacer()
-                
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "paperplane.fill")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .foregroundStyle(viewModel.selectedPriority.color())
+                VStack(spacing: 16) {
+                    TextField("Task Name", text: $viewModel.taskNameText)
+                        .background(Color(.white))
+                        .cornerRadius(8)
+                    
+                    TextField("Description", text: $viewModel.taskDescriptionText)
+                        .background(Color(.white))
+                        .cornerRadius(8)
+                    
+                    Divider()
+                    
+                    HStack {
+                        PriorityPickerView(selectedPriority: $viewModel.selectedPriority)
+                        
+                        Spacer()
+                        
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "paperplane.fill")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(viewModel.selectedPriority.color())
+                        }
+                    }
+                    
+                    Spacer().frame(height: 40)
                 }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 20)
             }
-        }
-        .padding(.horizontal, 24)
+            .cornerRadius(16)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 

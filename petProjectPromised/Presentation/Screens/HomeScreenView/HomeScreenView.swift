@@ -24,6 +24,9 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
         ZStack {
             Color.white
                 .ignoresSafeArea()
+                .onTapGesture {
+                    showAddTaskSheet = false
+                }
             
             VStack {
                 MainScreenHeaderView()
@@ -38,21 +41,39 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
             VStack {
                 Spacer()
                 
-                HStack(alignment: .bottom) {
+                HStack {
                     Spacer()
                     
                     MainRoundedButton() {
                         showAddTaskSheet = true
                     }
                 }
-                .padding(.trailing, 24)
+                .padding(.horizontal, 24)
                 .padding(.bottom, 44)
             }
+            
+            
+            if showAddTaskSheet {
+                Color.black.opacity(0.5)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        showAddTaskSheet = false
+                    }
+                    .transition(.opacity)
+            }
+            
+            if showAddTaskSheet {
+                VStack {
+                    Spacer()
+                    
+                    AddTaskView(viewModel: AddTaskViewModelImpl())
+                }
+                //.ignoresSafeArea(edges: .bottom)
+                .padding(.bottom, -34) 
+                .transition(.move(edge: .bottom))
+            }
         }
-        .sheet(isPresented: $showAddTaskSheet) {
-            AddTaskView(viewModel: AddTaskViewModelImpl())
-                .presentationDetents([.medium])
-        }
+        .animation(.smooth, value: showAddTaskSheet)
     }
     
     var tasks: some View {
