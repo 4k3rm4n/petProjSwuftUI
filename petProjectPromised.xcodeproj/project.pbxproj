@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5D8872302E8ED73C0007FDAC /* SwiftUICalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 5D88722F2E8ED73C0007FDAC /* SwiftUICalendar */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		5DED53262E8592B700B6F2C7 /* petProjectPromised.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = petProjectPromised.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D8872302E8ED73C0007FDAC /* SwiftUICalendar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = petProjectPromised;
 			packageProductDependencies = (
+				5D88722F2E8ED73C0007FDAC /* SwiftUICalendar */,
 			);
 			productName = petProjectPromised;
 			productReference = 5DED53262E8592B700B6F2C7 /* petProjectPromised.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 5DED531D2E8592B700B6F2C7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5D88722E2E8ED73C0007FDAC /* XCRemoteSwiftPackageReference "SwiftUICalendar" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5DED53272E8592B700B6F2C7 /* Products */;
 			projectDirPath = "";
@@ -324,6 +333,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5D88722E2E8ED73C0007FDAC /* XCRemoteSwiftPackageReference "SwiftUICalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GGJJack/SwiftUICalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.14;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5D88722F2E8ED73C0007FDAC /* SwiftUICalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D88722E2E8ED73C0007FDAC /* XCRemoteSwiftPackageReference "SwiftUICalendar" */;
+			productName = SwiftUICalendar;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5DED531E2E8592B700B6F2C7 /* Project object */;
 }

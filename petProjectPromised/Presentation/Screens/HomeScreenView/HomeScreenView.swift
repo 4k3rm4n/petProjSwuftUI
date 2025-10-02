@@ -57,6 +57,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                 Color.black.opacity(0.5)
                     .ignoresSafeArea()
                     .onTapGesture {
+                        KeyboardOperations.hideKeyboard()
                         showAddTaskSheet = false
                     }
                     .transition(.opacity)
