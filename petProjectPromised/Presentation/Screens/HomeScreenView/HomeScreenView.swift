@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 protocol HomeScreenViewModel: ObservableObject {
     var tasks: [Task] { get }
@@ -17,6 +18,7 @@ protocol HomeScreenViewModel: ObservableObject {
 
 struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
     @ObservedObject var viewModel: ViewModel
+    @StateObject private var keyboeardResponder = KeyboardResponder()
     
     @State private var showAddTaskSheet: Bool = false
     
@@ -24,9 +26,6 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
         ZStack {
             Color.white
                 .ignoresSafeArea()
-                .onTapGesture {
-                    showAddTaskSheet = false
-                }
             
             VStack {
                 MainScreenHeaderView()
@@ -37,6 +36,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                     EmptyTaskView()
                 }
             }
+            .padding(.top, 68)
             
             VStack {
                 Spacer()
@@ -49,7 +49,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                     }
                 }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 44)
+                .padding(.bottom, 80)
             }
             
             
@@ -68,12 +68,14 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                     Spacer()
                     
                     AddTaskView(viewModel: AddTaskViewModelImpl())
+                        .padding(.bottom, keyboeardResponder.keyboardHeight)
+                        .animation(.smooth, value: keyboeardResponder.keyboardHeight)
                 }
-                //.ignoresSafeArea(edges: .bottom)
-                .padding(.bottom, -34) 
+                .ignoresSafeArea(edges: .all)
                 .transition(.move(edge: .bottom))
             }
         }
+        .ignoresSafeArea(edges: .all)
         .animation(.smooth, value: showAddTaskSheet)
     }
     

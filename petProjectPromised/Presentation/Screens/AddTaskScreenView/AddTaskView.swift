@@ -23,10 +23,12 @@ struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel{
                 VStack(spacing: 16) {
                     TextField("Task Name", text: $viewModel.taskNameText)
                         .background(Color(.white))
+                        .padding(.horizontal, 4)
                         .cornerRadius(8)
                     
                     TextField("Description", text: $viewModel.taskDescriptionText)
                         .background(Color(.white))
+                        .padding(.horizontal, 4)
                         .cornerRadius(8)
                     
                     Divider()
