@@ -18,7 +18,7 @@ protocol HomeScreenViewModel: ObservableObject {
 
 struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
     @ObservedObject var viewModel: ViewModel
-    @StateObject private var keyboeardResponder = KeyboardResponder()
+    @StateObject private var keyboardResponder = KeyboardResponder()
     
     @State private var showAddTaskSheet: Bool = false
     
@@ -68,8 +68,8 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                     Spacer()
                     
                     AddTaskView(viewModel: AddTaskViewModelImpl())
-                        .padding(.bottom, keyboeardResponder.keyboardHeight)
-                        .animation(.smooth, value: keyboeardResponder.keyboardHeight)
+                        .padding(.bottom, keyboardResponder.keyboardHeight)
+                        .animation(.smooth, value: keyboardResponder.keyboardHeight)
                 }
                 .ignoresSafeArea(edges: .all)
                 .transition(.move(edge: .bottom))
