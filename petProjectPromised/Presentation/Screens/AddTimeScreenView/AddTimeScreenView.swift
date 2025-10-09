@@ -10,17 +10,37 @@ import SwiftUICalendar
 
 struct AddTimeScreenView: View {
     
+    @State var isShowTimePicker: Bool = true
     @Binding var focusDate: YearMonthDay?
     @Binding var selectedTime: Date
     
     var body: some View {
-        VStack(spacing: 24) {
-            DatePicker("Оберіть час", selection: $selectedTime, displayedComponents: .hourAndMinute)
-                .datePickerStyle(.wheel)
-                .labelsHidden()
-                .frame(maxWidth: .infinity)
-                .background(Color.teal)
-                .cornerRadius(10)
+        VStack(spacing: 12) {
+            VStack {
+                HStack {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            isShowTimePicker.toggle()
+                        }
+                    } label: {
+                        Image(systemName: "clock.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundStyle(.teal)
+                    }
+                    
+                    Spacer()
+                }
+                
+                DatePicker("Оберіть час", selection: $selectedTime, displayedComponents: .hourAndMinute)
+                    .datePickerStyle(.wheel)
+                    .labelsHidden()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: isShowTimePicker ? 200 : 0)
+                    .background(Color.teal)
+                    .cornerRadius(10)
+                    //.offset(x: isShowTimePicker ? 0 : -400)
+            }
             
             Divider()
             

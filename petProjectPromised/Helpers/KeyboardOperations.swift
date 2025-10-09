@@ -27,10 +27,6 @@ class KeyboardResponder: ObservableObject {
                 let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect ?? .zero
                 return notification.name == UIResponder.keyboardWillHideNotification ? 0 : endFrame.height
             }
-            .map { (height: CGFloat) in
-                print("keyboard height changed to: \(height)")
-                return height
-            }
             .assign(to: \.keyboardHeight, on: self)
     }
 }
