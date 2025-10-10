@@ -10,7 +10,7 @@ import SwiftUICalendar
 import Combine
 
 class AddTaskViewModelImpl: AddTaskViewModel {
-    @Published var taskNameText: String
+    @Published var taskNameText: String = ""
     @Published var taskDescriptionText: String
     @Published var selectedPriority: TaskPriority
     @Published var taskTillTime: Date
@@ -23,7 +23,6 @@ class AddTaskViewModelImpl: AddTaskViewModel {
     private var cancellables: Set<AnyCancellable> = []
     
     init() {
-        taskNameText = ""
         taskDescriptionText = ""
         selectedPriority = .medium
         taskTillTime = Date()
@@ -41,11 +40,14 @@ class AddTaskViewModelImpl: AddTaskViewModel {
             .store(in: &cancellables)
         
         $taskNameText
-            .sink { [weak self] text in
-                guard let self = self else { return }
+            .sink { text in
                 print("taskNameText: \(text)")
             }
             .store(in: &cancellables)
+    }
+    
+    deinit {
+        print("deinited")
     }
     
     private func saveTask() {

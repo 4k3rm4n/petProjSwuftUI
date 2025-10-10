@@ -17,6 +17,7 @@ protocol HomeScreenViewModel: ObservableObject {
 
 
 struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
+    private let viewModel1 = AddTaskViewModelImpl()
     @ObservedObject var viewModel: ViewModel
     @StateObject private var keyboardResponder = KeyboardResponder()
     
@@ -67,7 +68,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                 VStack {
                     Spacer()
                     
-                    AddTaskView(viewModel: AddTaskViewModelImpl())
+                    AddTaskView(viewModel: viewModel1)
                         .padding(.bottom, keyboardResponder.keyboardHeight)
                         .animation(.smooth, value: keyboardResponder.keyboardHeight)
                 }

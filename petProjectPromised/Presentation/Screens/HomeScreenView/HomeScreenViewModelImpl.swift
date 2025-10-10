@@ -22,7 +22,7 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
             .$tasks
             .sink { [weak self] in
                 self?.tasks = $0
-                self?.isTasksExist = $0.isEmpty
+                self?.isTasksExist = !$0.isEmpty
             }
             .store(in: &cancellables)
         
