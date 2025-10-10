@@ -21,8 +21,13 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
         taskName = task.name
         taskPriority = task.priority
         taskStatus = task.status
-        tillTime = CustomFormatters.dateTime.string(from: task.tillDate)
-        tillDate = CustomFormatters.date.string(from: task.tillDate)
+        if let date = task.tillDate {
+            tillTime = CustomFormatters.dateTime.string(from: date)
+            tillDate = CustomFormatters.date.string(from: date)
+        } else {
+            tillDate = ""
+            tillTime = ""
+        }
     }
 }
 

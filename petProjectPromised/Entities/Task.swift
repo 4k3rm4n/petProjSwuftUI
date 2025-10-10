@@ -11,11 +11,11 @@ struct Task: Identifiable, Hashable, Codable {
     var id: UUID
     var name: String
     var description: String
-    var tillDate: Date
+    var tillDate: Date?
     var status: TaskStatus
     var priority: TaskPriority
     
-    init(id: UUID = UUID(), name: String, description: String, tillDate: Date, status: TaskStatus, priority: TaskPriority) {
+    init(id: UUID = UUID(), name: String, description: String, tillDate: Date?, status: TaskStatus, priority: TaskPriority) {
         self.id = id
         self.name = name
         self.description = description
