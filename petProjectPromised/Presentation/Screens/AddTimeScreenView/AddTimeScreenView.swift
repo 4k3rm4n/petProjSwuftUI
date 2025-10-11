@@ -11,6 +11,7 @@ import SwiftUICalendar
 struct AddTimeScreenView: View {
     
     @Environment(\.dismiss) var dismiss
+    let dismissParent: () -> Void
     @Binding var isSaveButtonClicked: Bool
     @Binding var isShowTimePicker: Bool
     @Binding var focusDate: YearMonthDay?
@@ -54,6 +55,7 @@ struct AddTimeScreenView: View {
             SetDateTimeRoundedButton {
                 isSaveButtonClicked = true
                 dismiss()
+                dismissParent()
             }
         }
         .padding(24)
@@ -61,5 +63,5 @@ struct AddTimeScreenView: View {
 }
 
 #Preview {
-    AddTimeScreenView(isSaveButtonClicked: .constant(false), isShowTimePicker: .constant(false), focusDate: .constant(YearMonthDay.current), selectedTime: .constant(Date()))
+    AddTimeScreenView(dismissParent: {}, isSaveButtonClicked: .constant(false), isShowTimePicker: .constant(false), focusDate: .constant(YearMonthDay.current), selectedTime: .constant(Date()))
 }

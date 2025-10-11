@@ -18,11 +18,11 @@ struct EmptyTaskView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 80)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(.secondary)
                 
                 Text("You have no tasks, Hooray!")
                     .font(.system(size: 17))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(.secondary)
             }
         }
     }

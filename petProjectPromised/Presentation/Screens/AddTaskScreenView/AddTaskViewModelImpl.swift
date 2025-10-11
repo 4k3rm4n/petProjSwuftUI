@@ -39,11 +39,11 @@ class AddTaskViewModelImpl: AddTaskViewModel {
             }
             .store(in: &cancellables)
         
-        $taskNameText
-            .sink { text in
-                print("taskNameText: \(text)")
-            }
-            .store(in: &cancellables)
+//        $taskNameText
+//            .sink { text in
+//                print("taskNameText: \(text)")
+//            }
+//            .store(in: &cancellables)
     }
     
     deinit {

@@ -22,6 +22,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
     @StateObject private var keyboardResponder = KeyboardResponder()
     
     @State private var showAddTaskSheet: Bool = false
+    @State private var addTaskSheetHeight: CGFloat = .zero
     
     var body: some View {
         ZStack {
@@ -37,7 +38,6 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                     EmptyTaskView()
                 }
             }
-            .padding(.top, 68)
             
             VStack {
                 Spacer()
@@ -50,46 +50,53 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                     }
                 }
                 .padding(.horizontal, 24)
-                .padding(.bottom, 80)
-            }
-            
-            
-            if showAddTaskSheet {
-                Color.black.opacity(0.5)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        KeyboardOperations.hideKeyboard()
-                        showAddTaskSheet = false
-                    }
-                    .transition(.opacity)
-            }
-            
-            if showAddTaskSheet {
-                VStack {
-                    Spacer()
-                    
-                    AddTaskView(viewModel: viewModel1)
-                        .padding(.bottom, keyboardResponder.keyboardHeight)
-                        .animation(.smooth, value: keyboardResponder.keyboardHeight)
-                }
-                .ignoresSafeArea(edges: .all)
-                .transition(.move(edge: .bottom))
+                .padding(.bottom, 44)
             }
         }
-        .ignoresSafeArea(edges: .all)
-        .animation(.smooth, value: showAddTaskSheet)
+        .sheet(isPresented: $showAddTaskSheet) {
+            AddTaskView(viewModel: viewModel1)
+                .overlay {
+                    GeometryReader { geometry in
+                        Color.clear
+                            .preference(key: ChildHeightPreferenceKey.self, value: geometry.size.height)
+                    }
+                }
+                .onPreferenceChange(ChildHeightPreferenceKey.self) { height in
+                    addTaskSheetHeight = height
+                }
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.height(addTaskSheetHeight)])
+        }
     }
     
     var tasks: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 24) {
                 ForEach(viewModel.getTasksViewModels()) { taskViewModel in
-                    RoundedTaskView(viewModel: taskViewModel)
+                    ZStack {
+                        HStack(alignment: .center) {
+                            Spacer()
+                            
+                            Image(systemName: "trash")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .foregroundStyle(taskViewModel.taskPriority.color())
+                        }
+                        .padding(.horizontal, 24)
+                        
+                        RoundedTaskView(viewModel: taskViewModel)
+                    }
                 }
             }
         }
         .padding(.top, 24)
-        .padding(.horizontal, 16)
+    }
+}
+
+struct ChildHeightPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = .zero
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 

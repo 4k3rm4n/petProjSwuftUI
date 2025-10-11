@@ -5,7 +5,10 @@
 //  Created by Bohdan Peretiatko on 29.09.2025.
 //
 
-// MARK: TO DO VALIDATE() METHOD IN VIEWMODEL ------------------
+// MARK: TO DO VALIDATE() METHOD IN VIEWMODEL ----------------------
+// MARK: TO DO fix when time was not choosen -----------------------
+// MARK: TO DO discover addTaskView viewModel deinialised ----------
+// MARK: TO DO allow to do few rows in text fields in addTaskView --
 
 import SwiftUI
 import SwiftUICalendar
@@ -20,7 +23,8 @@ protocol AddTaskViewModel: ObservableObject {
     var isSaveTaskButtonClicked: Bool { get set }
 }
 
-struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel{
+struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel {
+    @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: ViewModel
     @State var isPresentedDatePickerScreen: Bool = false
     
@@ -60,13 +64,13 @@ struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel{
                         }
                     }
                     
-                    Spacer().frame(height: 40)
+                    Spacer()
                 }
                 .padding(.horizontal, 24)
-                .padding(.vertical, 20)
+                .padding(.top, 20)
             }
             .fullScreenCover(isPresented: $isPresentedDatePickerScreen) {
-                AddTimeScreenView(isSaveButtonClicked: $viewModel.isSaveTaskButtonClicked, isShowTimePicker: $viewModel.isSelectedTime, focusDate: $viewModel.taskTillDate, selectedTime: $viewModel.taskTillTime)
+                AddTimeScreenView(dismissParent: { dismiss() }, isSaveButtonClicked: $viewModel.isSaveTaskButtonClicked, isShowTimePicker: $viewModel.isSelectedTime, focusDate: $viewModel.taskTillDate, selectedTime: $viewModel.taskTillTime)
             }
             .cornerRadius(16)
             .fixedSize(horizontal: false, vertical: true)

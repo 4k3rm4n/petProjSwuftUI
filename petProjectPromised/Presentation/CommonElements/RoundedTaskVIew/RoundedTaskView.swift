@@ -19,6 +19,8 @@ protocol RoundedTaskViewModel: ObservableObject, Identifiable {
 struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
     @ObservedObject var viewModel: ViewModel
     
+    @State private var taskOffsetX: CGFloat = .zero
+    
     var body: some View {
         ZStack {
             Color.white
@@ -75,6 +77,23 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
         .cornerRadius(8)
         .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 0)
         .padding(.horizontal, 10)
+        .offset(x: taskOffsetX)
+        .simultaneousGesture(
+            DragGesture()
+                .onChanged { gesture in
+                    if gesture.translation.width < 0 {
+                        taskOffsetX = gesture.translation.width
+                    }
+                }
+                .onEnded { gesture in
+                    if gesture.translation.width < -50 {
+                        taskOffsetX = -100
+                    } else {
+                        taskOffsetX = 0
+                    }
+                }
+        )
+        .animation(.easeInOut, value: taskOffsetX)
     }
 }
 
