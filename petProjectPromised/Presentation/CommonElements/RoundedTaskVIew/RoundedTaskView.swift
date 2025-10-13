@@ -86,8 +86,8 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
                     }
                 }
                 .onEnded { gesture in
-                    if gesture.translation.width < -50 {
-                        taskOffsetX = -100
+                    if gesture.translation.width < -45 {
+                        taskOffsetX = -90
                     } else {
                         taskOffsetX = 0
                     }

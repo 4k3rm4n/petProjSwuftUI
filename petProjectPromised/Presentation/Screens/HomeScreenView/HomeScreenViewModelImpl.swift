@@ -25,8 +25,9 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
                 self?.isTasksExist = !$0.isEmpty
             }
             .store(in: &cancellables)
-        
     }
+    
+    
     
     func getTasksViewModels() -> [RoundedTaskViewModelImpl] {
         var viewModels: [RoundedTaskViewModelImpl] = []
@@ -34,6 +35,14 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
             viewModels.append(.init(from: task))
         }
         return viewModels
+    }
+    
+    func removeTask(with taskId: UUID) {
+        do {
+            try localStorageService.removeTask(with: taskId)
+        } catch let error {
+            print(error.localizedDescription)
+        }
     }
 }
 

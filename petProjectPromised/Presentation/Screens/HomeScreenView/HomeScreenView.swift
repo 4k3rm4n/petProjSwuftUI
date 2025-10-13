@@ -13,13 +13,13 @@ protocol HomeScreenViewModel: ObservableObject {
     var isTasksExist: Bool { get }
     
     func getTasksViewModels() -> [RoundedTaskViewModelImpl]
+    func removeTask(with taskId: UUID)
 }
 
 
 struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
     private let viewModel1 = AddTaskViewModelImpl()
     @ObservedObject var viewModel: ViewModel
-    @StateObject private var keyboardResponder = KeyboardResponder()
     
     @State private var showAddTaskSheet: Bool = false
     @State private var addTaskSheetHeight: CGFloat = .zero
@@ -77,10 +77,17 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                         HStack(alignment: .center) {
                             Spacer()
                             
-                            Image(systemName: "trash")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .foregroundStyle(taskViewModel.taskPriority.color())
+                            // MARK: todo remove to seperate folder
+                            Button {
+                                withAnimation(.smooth) {
+                                    viewModel.removeTask(with: taskViewModel.id)
+                                }
+                            } label: {
+                                Image(systemName: "trash")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .foregroundStyle(taskViewModel.taskPriority.color())
+                            }
                         }
                         .padding(.horizontal, 24)
                         

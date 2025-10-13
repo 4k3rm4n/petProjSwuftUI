@@ -5,9 +5,10 @@
 //  Created by Bohdan Peretiatko on 29.09.2025.
 //
 
+// MARK: TO DO RoundedTaskView remove constants --------------------
 // MARK: TO DO VALIDATE() METHOD IN VIEWMODEL ----------------------
 // MARK: TO DO fix when time was not choosen -----------------------
-// MARK: TO DO discover addTaskView viewModel deinialised ----------
+// MARK: TO DO discover addTaskView viewModel deinialized ----------
 // MARK: TO DO allow to do few rows in text fields in addTaskView --
 
 import SwiftUI
@@ -35,14 +36,12 @@ struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel {
                 VStack(spacing: 16) {
                     TextField("Task Name", text: $viewModel.taskNameText)
                         .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
                         .background(Color(.white))
                         .padding(.horizontal, 4)
                         .cornerRadius(8)
                     
                     TextField("Description", text: $viewModel.taskDescriptionText)
                         .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
                         .background(Color(.white))
                         .padding(.horizontal, 4)
                         .cornerRadius(8)
