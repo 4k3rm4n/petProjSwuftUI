@@ -45,6 +45,10 @@ class AddTaskViewModelImpl: AddTaskViewModel {
         print("Add Task view model deinited")
     }
     
+    func isTaskNameTextFieldEmpty() -> Bool {
+        taskNameText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
     private func saveTask() {
         do {
             try localStorageService.saveTask(with: .init(name: taskNameText, description: taskDescriptionText, tillDate: convertToDate(), tillTime: convertToTime(), status: .active, priority: selectedPriority))

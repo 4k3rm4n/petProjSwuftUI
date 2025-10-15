@@ -14,12 +14,15 @@ protocol RoundedTaskViewModel: ObservableObject, Identifiable {
     var taskStatus: TaskStatus { get set }
     var tillTime: String? { get set }
     var tillDate: String? { get set }
+    
+    func removeTask()
 }
 
 struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
     @ObservedObject var viewModel: ViewModel
     
     @State private var taskOffsetX: CGFloat = .zero
+    @State private var primaryWidth: CGFloat = .zero
     
     var body: some View {
         ZStack {
@@ -57,16 +60,20 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
                     .padding(.horizontal, 16)
                 
                 HStack {
-                    if let time = viewModel.tillTime {
-                        Label(time, systemImage: "alarm") // Till Time
+                    if let time = viewModel.tillTime { // Till Time
+                        Label(time, systemImage: "alarm")
                             .font(.system(size: 12))
                             .foregroundStyle(.red)
                     }
                     
                     Spacer()
                     
-                    if let date = viewModel.tillDate {
-                        Text(date) // Till Date
+                    if let date = viewModel.tillDate { // Till Date
+                        Text(date)
+                            .font(.system(size: 12))
+                            .foregroundStyle(.gray)
+                    } else {
+                        Text("No Deadline")
                             .font(.system(size: 12))
                             .foregroundStyle(.gray)
                     }
@@ -80,6 +87,14 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
         .fixedSize(horizontal: false, vertical: true)
         .cornerRadius(8)
         .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 0)
+        .background(
+            GeometryReader { geometry in
+                Color.clear
+                    .onAppear() {
+                        primaryWidth = geometry.size.width
+                    }
+            }
+        )
         .padding(.horizontal, 10)
         .offset(x: taskOffsetX)
         .simultaneousGesture(
@@ -90,8 +105,13 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
                     }
                 }
                 .onEnded { gesture in
-                    if gesture.translation.width < -45 {
-                        taskOffsetX = -90
+                    if gesture.translation.width < -(primaryWidth / 8) && gesture.translation.width > -(primaryWidth / 2) {
+                        taskOffsetX = -(primaryWidth / 4)
+                    } else if gesture.translation.width <= -(primaryWidth / 2) {
+                        taskOffsetX = -(primaryWidth)
+                        withAnimation(.smooth) {
+                            viewModel.removeTask()
+                        }
                     } else {
                         taskOffsetX = 0
                     }

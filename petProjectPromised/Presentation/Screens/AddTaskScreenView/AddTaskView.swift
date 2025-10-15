@@ -5,11 +5,11 @@
 //  Created by Bohdan Peretiatko on 29.09.2025.
 //
 
-// MARK: TO DO RoundedTaskView remove constants -------------------- -
-// MARK: TO DO VALIDATE() METHOD IN VIEWMODEL ---------------------- -
+// MARK: TO DO RoundedTaskView remove constants -------------------- +
+// MARK: TO DO VALIDATE() METHOD IN VIEWMODEL ---------------------- +
 // MARK: TO DO fix when time was not choosen ----------------------- +
-// MARK: TO DO fix animations in addTimeView ----------------------- -
-// MARK: TO DO discover addTaskView viewModel deinialized ----------
+// MARK: TO DO fix animations in addTimeView ----------------------- ?
+// MARK: TO DO discover addTaskView viewModel deinialized ---------- ?
 // MARK: TO DO allow to do few rows in text fields in addTaskView -- +
 
 import SwiftUI
@@ -23,6 +23,8 @@ protocol AddTaskViewModel: ObservableObject {
     var taskTillDate: YearMonthDay? { get set }
     var isSelectedTime: Bool { get set }
     var isSaveTaskButtonClicked: Bool { get set }
+    
+    func isTaskNameTextFieldEmpty() -> Bool
 }
 
 struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel {
@@ -61,8 +63,9 @@ struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel {
                             Image(systemName: "paperplane.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundStyle(viewModel.selectedPriority.color())
+                                .foregroundStyle(viewModel.isTaskNameTextFieldEmpty() ? .gray : viewModel.selectedPriority.color())
                         }
+                        .disabled(viewModel.isTaskNameTextFieldEmpty())
                     }
                     
                     Spacer()

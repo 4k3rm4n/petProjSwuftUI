@@ -15,6 +15,7 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
     @Published var tillDate: String?
     @Published var tillTime: String?
 
+    private let localStorageService =  LocalStorageService()
     
     init(from task: Task) {
         id = task.id
@@ -29,7 +30,17 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
             tillTime = CustomFormatters.dateTime.string(from: time)
         }
     }
+    
+    func removeTask() {
+        do {
+            try localStorageService.removeTask(with: id)
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
 }
+
+
 
 
 extension RoundedTaskViewModelImpl {
