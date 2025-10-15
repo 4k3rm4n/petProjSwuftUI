@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SetDateTimeRoundedButton: View {
+    @Binding var buttonText: String
     var action: () -> Void
 
     var body: some View {
@@ -16,7 +17,7 @@ struct SetDateTimeRoundedButton: View {
                 Image(systemName: "clock.arrow.circlepath")
                     .foregroundStyle(.white)
                 
-                Text("Reschedule")
+                Text(buttonText)
                     .font(.system(size: 20))
                     .foregroundStyle(.white)
             }
@@ -29,5 +30,5 @@ struct SetDateTimeRoundedButton: View {
 }
 
 #Preview {
-    SetDateTimeRoundedButton(action: {})
+    SetDateTimeRoundedButton(buttonText: .constant("Save without a deadline"), action: {})
 }

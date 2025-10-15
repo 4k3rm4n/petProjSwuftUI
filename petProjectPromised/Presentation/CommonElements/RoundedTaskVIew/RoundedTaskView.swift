@@ -12,8 +12,8 @@ protocol RoundedTaskViewModel: ObservableObject, Identifiable {
     var taskName: String { get }
     var taskPriority: TaskPriority { get }
     var taskStatus: TaskStatus { get set }
-    var tillTime: String { get set }
-    var tillDate: String { get set }
+    var tillTime: String? { get set }
+    var tillDate: String? { get set }
 }
 
 struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
@@ -57,15 +57,19 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
                     .padding(.horizontal, 16)
                 
                 HStack {
-                    Label(viewModel.tillTime, systemImage: "alarm") // Till Time
-                        .font(.system(size: 12))
-                        .foregroundStyle(.red) //
+                    if let time = viewModel.tillTime {
+                        Label(time, systemImage: "alarm") // Till Time
+                            .font(.system(size: 12))
+                            .foregroundStyle(.red)
+                    }
                     
                     Spacer()
                     
-                    Text(viewModel.tillDate) // Till Date
-                        .font(.system(size: 12))
-                        .foregroundStyle(.gray)
+                    if let date = viewModel.tillDate {
+                        Text(date) // Till Date
+                            .font(.system(size: 12))
+                            .foregroundStyle(.gray)
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 16)

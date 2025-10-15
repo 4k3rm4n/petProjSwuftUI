@@ -12,8 +12,8 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
     @Published var taskName: String
     @Published var taskPriority: TaskPriority
     @Published var taskStatus: TaskStatus
-    @Published var tillTime: String
-    @Published var tillDate: String
+    @Published var tillDate: String?
+    @Published var tillTime: String?
 
     
     init(from task: Task) {
@@ -22,11 +22,11 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
         taskPriority = task.priority
         taskStatus = task.status
         if let date = task.tillDate {
-            tillTime = CustomFormatters.dateTime.string(from: date)
             tillDate = CustomFormatters.date.string(from: date)
-        } else {
-            tillDate = ""
-            tillTime = ""
+        }
+        
+        if let time = task.tillTime {
+            tillTime = CustomFormatters.dateTime.string(from: time)
         }
     }
 }

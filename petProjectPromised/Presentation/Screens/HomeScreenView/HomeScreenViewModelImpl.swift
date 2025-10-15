@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 
+//MARK: todo save tasks viewModels here mb?
+
 class HomeScreenViewModelImpl: HomeScreenViewModel {
     @Published var tasks: [Task]
     @Published var isTasksExist: Bool = false
@@ -26,8 +28,6 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
             }
             .store(in: &cancellables)
     }
-    
-    
     
     func getTasksViewModels() -> [RoundedTaskViewModelImpl] {
         var viewModels: [RoundedTaskViewModelImpl] = []

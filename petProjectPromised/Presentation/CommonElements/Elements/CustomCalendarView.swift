@@ -62,7 +62,9 @@ struct CustomCalendarView: View {
                             .font(.system(size: 12, weight: .bold, design: .default))
                             .foregroundColor(focusDate == date ? .white : .black)
                             .onTapGesture {
-                                focusDate = (date != focusDate ? date : nil)
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    focusDate = (date != focusDate ? date : nil)
+                                }
                             }
                     }
                 })

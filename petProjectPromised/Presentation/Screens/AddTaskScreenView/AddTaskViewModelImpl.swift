@@ -47,7 +47,7 @@ class AddTaskViewModelImpl: AddTaskViewModel {
     
     private func saveTask() {
         do {
-            try localStorageService.saveTask(with: .init(name: taskNameText, description: taskDescriptionText, tillDate: convertToDate(), status: .active, priority: selectedPriority))
+            try localStorageService.saveTask(with: .init(name: taskNameText, description: taskDescriptionText, tillDate: convertToDate(), tillTime: convertToTime(), status: .active, priority: selectedPriority))
         } catch let error {
             print(error.localizedDescription)
         }
@@ -58,25 +58,32 @@ class AddTaskViewModelImpl: AddTaskViewModel {
         taskTillTime = Date()
         taskTillDate = nil
         isSelectedTime = false
-        isSaveTaskButtonClicked = false
     }
     
     private func convertToDate() -> Date? {
-        guard let taskTillDate = taskTillDate, let finalDate = taskTillDate.date else { return nil }
+        guard let taskTillDate = taskTillDate else { return nil }
+        return taskTillDate.date
+//        if isSelectedTime {
+//            let calendar = Calendar.current
+//            let dateComponents = calendar.dateComponents([.year, .month, .day], from: finalDate)
+        //            let timeComponents = calendar.dateComponents([.hour, .minute], from: taskTillTime)
+        //
+        //            var combinedComponents = DateComponents()
+        //            combinedComponents.year = dateComponents.year
+        //            combinedComponents.month = dateComponents.month
+        //            combinedComponents.day = dateComponents.day
+        //            combinedComponents.hour = timeComponents.hour
+        //            combinedComponents.minute = timeComponents.minute
+        //
+        //            return calendar.date(from: combinedComponents)
+        //        }
+    }
+    
+    private func convertToTime() -> Date? {
         if isSelectedTime {
-            let calendar = Calendar.current
-            let dateComponents = calendar.dateComponents([.year, .month, .day], from: finalDate)
-            let timeComponents = calendar.dateComponents([.hour, .minute], from: taskTillTime)
-            
-            var combinedComponents = DateComponents()
-            combinedComponents.year = dateComponents.year
-            combinedComponents.month = dateComponents.month
-            combinedComponents.day = dateComponents.day
-            combinedComponents.hour = timeComponents.hour
-            combinedComponents.minute = timeComponents.minute
-            
-            return calendar.date(from: combinedComponents)
+            return taskTillTime
+        } else {
+            return nil
         }
-        return finalDate
     }
 }

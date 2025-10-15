@@ -17,6 +17,8 @@ struct AddTimeScreenView: View {
     @Binding var focusDate: YearMonthDay?
     @Binding var selectedTime: Date
     
+    @State var saveButtonText: String = "Save without a deadline"
+    
     var body: some View {
         VStack(spacing: 12) {
             VStack {
@@ -29,8 +31,9 @@ struct AddTimeScreenView: View {
                         Image(systemName: "clock.fill")
                             .resizable()
                             .frame(width: 30, height: 30)
-                            .foregroundStyle(.teal)
+                            .foregroundStyle(focusDate == nil ? .gray : .teal)
                     }
+                    .disabled(focusDate == nil)
                     
                     Spacer()
                 }
@@ -42,7 +45,18 @@ struct AddTimeScreenView: View {
                     .frame(height: isShowTimePicker ? 200 : 0)
                     .background(Color.teal)
                     .cornerRadius(10)
-                    //.offset(x: isShowTimePicker ? 0 : -400)
+            }
+            .onChange(of: focusDate) { oldValue, newValue in
+                if newValue == nil {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        isShowTimePicker = false
+                        saveButtonText = "Save without a deadline"
+                    }
+                } else {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        saveButtonText = "Reschedule"
+                    }
+                }
             }
             
             Divider()
@@ -52,7 +66,7 @@ struct AddTimeScreenView: View {
             
             Spacer()
             
-            SetDateTimeRoundedButton {
+            SetDateTimeRoundedButton(buttonText: $saveButtonText) {
                 isSaveButtonClicked = true
                 dismiss()
                 dismissParent()
