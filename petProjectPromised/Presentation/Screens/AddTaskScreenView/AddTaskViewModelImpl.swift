@@ -55,13 +55,6 @@ class AddTaskViewModelImpl: AddTaskViewModel {
         } catch let error {
             print(error.localizedDescription)
         }
-        
-        taskNameText = ""
-        taskDescriptionText = ""
-        selectedPriority = .medium
-        taskTillTime = Date()
-        taskTillDate = nil
-        isSelectedTime = false
     }
     
     private func convertToDate() -> Date? {

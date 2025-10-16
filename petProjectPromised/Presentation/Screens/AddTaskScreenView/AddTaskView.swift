@@ -8,8 +8,8 @@
 // MARK: TO DO RoundedTaskView remove constants -------------------- +
 // MARK: TO DO VALIDATE() METHOD IN VIEWMODEL ---------------------- +
 // MARK: TO DO fix when time was not choosen ----------------------- +
-// MARK: TO DO fix animations in addTimeView ----------------------- ?
-// MARK: TO DO discover addTaskView viewModel deinialized ---------- ?
+// MARK: TO DO fix animations in addTimeView ----------------------- ????
+// MARK: TO DO discover addTaskView viewModel deinialized ---------- ????
 // MARK: TO DO allow to do few rows in text fields in addTaskView -- +
 
 import SwiftUI

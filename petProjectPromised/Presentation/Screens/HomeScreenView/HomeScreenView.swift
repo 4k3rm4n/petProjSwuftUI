@@ -18,8 +18,9 @@ protocol HomeScreenViewModel: ObservableObject {
 
 
 struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
-    private let viewModel1 = AddTaskViewModelImpl()
+    //private let viewModel1 = AddTaskViewModelImpl()
     @ObservedObject var viewModel: ViewModel
+    //@StateObject private var k = KeyboardResponder()
     
     @State private var showAddTaskSheet: Bool = false
     @State private var addTaskSheetHeight: CGFloat = .zero
@@ -54,7 +55,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
             }
         }
         .sheet(isPresented: $showAddTaskSheet) {
-            AddTaskView(viewModel: viewModel1)
+            AddTaskView(viewModel: AddTaskViewModelImpl())
                 .overlay {
                     GeometryReader { geometry in
                         Color.clear
