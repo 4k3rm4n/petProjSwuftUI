@@ -5,46 +5,32 @@
 //  Created by Bohdan Peretiatko on 29.09.2025.
 //
 
-// MARK: TO DO RoundedTaskView remove constants -------------------- +
-// MARK: TO DO VALIDATE() METHOD IN VIEWMODEL ---------------------- +
-// MARK: TO DO fix when time was not choosen ----------------------- +
 // MARK: TO DO fix animations in addTimeView ----------------------- ????
 // MARK: TO DO discover addTaskView viewModel deinialized ---------- ????
-// MARK: TO DO allow to do few rows in text fields in addTaskView -- +
+
+// MARK: working commit 16.10.2025
 
 import SwiftUI
 import SwiftUICalendar
 
-protocol AddTaskViewModel: ObservableObject {
-    var taskNameText: String { get set }
-    var taskDescriptionText: String { get set }
-    var selectedPriority: TaskPriority { get set }
-    var taskTillTime: Date { get set }
-    var taskTillDate: YearMonthDay? { get set }
-    var isSelectedTime: Bool { get set }
-    var isSaveTaskButtonClicked: Bool { get set }
-    
-    func isTaskNameTextFieldEmpty() -> Bool
-}
-
-struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel {
+struct AddTaskView: View {
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var viewModel: ViewModel
-    @State var isPresentedDatePickerScreen: Bool = false
-    @State private var textHeight: CGFloat = 30
+    @Binding var showAddTaskSheet: Bool
+    @Binding var showAddDateTimeScreen: Bool
+    @Binding var newTask: Task
     
     var body: some View {
             ZStack {
                 Color.white
                 
                 VStack(spacing: 16) {
-                    TextField("Task Name", text: $viewModel.taskNameText)
+                    TextField("Task Name", text: $newTask.name)
                         .autocorrectionDisabled()
                         .background(Color(.white))
                         .padding(.horizontal, 4)
                         .cornerRadius(8)
                     
-                    TextField("Description", text: $viewModel.taskDescriptionText, axis: .vertical)
+                    TextField("Description", text: $newTask.description, axis: .vertical)
                         .autocorrectionDisabled()
                         .background(Color(.white))
                         .padding(.horizontal, 4)
@@ -53,19 +39,20 @@ struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel {
                     Divider()
                     
                     HStack {
-                        PriorityPickerView(selectedPriority: $viewModel.selectedPriority)
+                        PriorityPickerView(selectedPriority: $newTask.priority)
                         
                         Spacer()
                         
                         Button {
-                            isPresentedDatePickerScreen = true
+                            showAddTaskSheet = false
+                            showAddDateTimeScreen = true
                         } label: {
                             Image(systemName: "paperplane.fill")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundStyle(viewModel.isTaskNameTextFieldEmpty() ? .gray : viewModel.selectedPriority.color())
+                                .foregroundStyle(newTask.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? .gray : newTask.priority.color())
                         }
-                        .disabled(viewModel.isTaskNameTextFieldEmpty())
+                        .disabled(newTask.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
                     
                     Spacer()
@@ -73,14 +60,11 @@ struct AddTaskView<ViewModel>: View where ViewModel: AddTaskViewModel {
                 .padding(.horizontal, 24)
                 .padding(.top, 20)
             }
-            .fullScreenCover(isPresented: $isPresentedDatePickerScreen) {
-                AddTimeScreenView(dismissParent: { dismiss() }, isSaveButtonClicked: $viewModel.isSaveTaskButtonClicked, isShowTimePicker: $viewModel.isSelectedTime, focusDate: $viewModel.taskTillDate, selectedTime: $viewModel.taskTillTime)
-            }
             .cornerRadius(16)
             .fixedSize(horizontal: false, vertical: true)
     }
 }
 
 #Preview {
-    AddTaskView(viewModel: AddTaskViewModelImpl())
+    AddTaskView(showAddTaskSheet: .constant(true), showAddDateTimeScreen: .constant(false), newTask: .constant(Task()))
 }

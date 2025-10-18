@@ -16,7 +16,7 @@ struct Task: Identifiable, Hashable, Codable {
     var status: TaskStatus
     var priority: TaskPriority
     
-    init(id: UUID = UUID(), name: String, description: String, tillDate: Date?, tillTime: Date?, status: TaskStatus, priority: TaskPriority) {
+    init(id: UUID = UUID(), name: String = "", description: String = "", tillDate: Date? = nil, tillTime: Date? = nil, status: TaskStatus = .active, priority: TaskPriority = .medium) {
         self.id = id
         self.name = name
         self.description = description

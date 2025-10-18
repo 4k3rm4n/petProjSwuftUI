@@ -8,14 +8,18 @@
 import SwiftUI
 import SwiftUICalendar
 
-struct AddTimeScreenView: View {
+protocol AddTimeScreenViewModel: ObservableObject {
+    var isShowTimePicker: Bool { get set }
+    var taskSelectedTime: Date { get set }
+    var taskTillDate: YearMonthDay? { get set }
     
+    func saveTask()
+}
+
+struct AddTimeScreenView<ViewModel>: View where ViewModel: AddTimeScreenViewModel {
+    
+    @ObservedObject var viewModel: ViewModel
     @Environment(\.dismiss) var dismiss
-    let dismissParent: () -> Void
-    @Binding var isSaveButtonClicked: Bool
-    @Binding var isShowTimePicker: Bool
-    @Binding var focusDate: YearMonthDay?
-    @Binding var selectedTime: Date
     
     @State var saveButtonText: String = "Save without a deadline"
     
@@ -25,31 +29,31 @@ struct AddTimeScreenView: View {
                 HStack {
                     Button {
                         withAnimation(.easeInOut(duration: 0.25)) {
-                            isShowTimePicker.toggle()
+                            viewModel.isShowTimePicker.toggle()
                         }
                     } label: {
                         Image(systemName: "clock.fill")
                             .resizable()
                             .frame(width: 30, height: 30)
-                            .foregroundStyle(focusDate == nil ? .gray : .teal)
+                            .foregroundStyle(viewModel.taskTillDate == nil ? .gray : .teal)
                     }
-                    .disabled(focusDate == nil)
+                    .disabled(viewModel.taskTillDate == nil)
                     
                     Spacer()
                 }
                 
-                DatePicker("Оберіть час", selection: $selectedTime, displayedComponents: .hourAndMinute)
+                DatePicker("Оберіть час", selection: $viewModel.taskSelectedTime , displayedComponents: .hourAndMinute)
                     .datePickerStyle(.wheel)
                     .labelsHidden()
                     .frame(maxWidth: .infinity)
-                    .frame(height: isShowTimePicker ? 200 : 0)
+                    .frame(height: viewModel.isShowTimePicker ? 200 : 0)
                     .background(Color.teal)
                     .cornerRadius(10)
             }
-            .onChange(of: focusDate) { oldValue, newValue in
+            .onChange(of: viewModel.taskTillDate) { oldValue, newValue in
                 if newValue == nil {
                     withAnimation(.easeInOut(duration: 0.25)) {
-                        isShowTimePicker = false
+                        viewModel.isShowTimePicker = false
                         saveButtonText = "Save without a deadline"
                     }
                 } else {
@@ -61,15 +65,14 @@ struct AddTimeScreenView: View {
             
             Divider()
             
-            CustomCalendarView(focusDate: $focusDate)
+            CustomCalendarView(focusDate: $viewModel.taskTillDate)
                 .frame(height: 325)
             
             Spacer()
             
             SetDateTimeRoundedButton(buttonText: $saveButtonText) {
-                isSaveButtonClicked = true
+                viewModel.saveTask()
                 dismiss()
-                dismissParent()
             }
         }
         .padding(24)
@@ -77,5 +80,5 @@ struct AddTimeScreenView: View {
 }
 
 #Preview {
-    AddTimeScreenView(dismissParent: {}, isSaveButtonClicked: .constant(false), isShowTimePicker: .constant(false), focusDate: .constant(YearMonthDay.current), selectedTime: .constant(Date()))
+    AddTimeScreenView(viewModel: AddTimeScreenViewModelImpl(from: Task()))
 }

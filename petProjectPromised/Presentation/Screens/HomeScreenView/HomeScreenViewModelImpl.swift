@@ -13,6 +13,7 @@ import Combine
 class HomeScreenViewModelImpl: HomeScreenViewModel {
     @Published var tasks: [Task]
     @Published var isTasksExist: Bool = false
+    @Published var newTask: Task = Task()
     
     private let userDefaultsStorage = UserDefaultStorage.shared
     private let localStorageService =  LocalStorageService()
@@ -23,6 +24,7 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
         userDefaultsStorage
             .$tasks
             .sink { [weak self] in
+                self?.newTask = Task()
                 self?.tasks = $0
                 self?.isTasksExist = !$0.isEmpty
             }

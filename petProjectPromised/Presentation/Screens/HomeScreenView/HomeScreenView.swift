@@ -11,6 +11,7 @@ import Combine
 protocol HomeScreenViewModel: ObservableObject {
     var tasks: [Task] { get }
     var isTasksExist: Bool { get }
+    var newTask: Task { get set }
     
     func getTasksViewModels() -> [RoundedTaskViewModelImpl]
     func removeTask(with taskId: UUID)
@@ -18,11 +19,10 @@ protocol HomeScreenViewModel: ObservableObject {
 
 
 struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
-    //private let viewModel1 = AddTaskViewModelImpl()
     @ObservedObject var viewModel: ViewModel
-    //@StateObject private var k = KeyboardResponder()
     
     @State private var showAddTaskSheet: Bool = false
+    @State private var showAddDateTimeScreen: Bool = false
     @State private var addTaskSheetHeight: CGFloat = .zero
     
     var body: some View {
@@ -55,7 +55,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
             }
         }
         .sheet(isPresented: $showAddTaskSheet) {
-            AddTaskView(viewModel: AddTaskViewModelImpl())
+            AddTaskView(showAddTaskSheet: $showAddTaskSheet, showAddDateTimeScreen: $showAddDateTimeScreen, newTask: $viewModel.newTask)
                 .overlay {
                     GeometryReader { geometry in
                         Color.clear
@@ -67,6 +67,9 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                 }
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.height(addTaskSheetHeight)])
+        }
+        .fullScreenCover(isPresented: $showAddDateTimeScreen) {
+            AddTimeScreenView(viewModel: AddTimeScreenViewModelImpl(from: viewModel.newTask))
         }
     }
     
