@@ -15,6 +15,7 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
     @Published var isTasksExist: Bool = false
     @Published var newTask: Task = Task()
     
+    private let notificationService = NotificationService()
     private let userDefaultsStorage = UserDefaultStorage.shared
     private let localStorageService =  LocalStorageService()
     private var cancellables: Set<AnyCancellable> = []
@@ -29,6 +30,8 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
                 self?.isTasksExist = !$0.isEmpty
             }
             .store(in: &cancellables)
+        
+        notificationService.requestPermission()
     }
     
     func getTasksViewModels() -> [RoundedTaskViewModelImpl] {

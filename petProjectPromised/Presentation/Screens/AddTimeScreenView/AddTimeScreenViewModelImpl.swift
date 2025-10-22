@@ -16,6 +16,7 @@ class AddTimeScreenViewModelImpl: AddTimeScreenViewModel {
     private var newTask: Task
     
     private let localStorageService: LocalStorageServiceProtocol = LocalStorageService()
+    private let notificationService = NotificationService()
     
     init(from newTask: Task) {
         isShowTimePicker = false
@@ -29,9 +30,31 @@ class AddTimeScreenViewModelImpl: AddTimeScreenViewModel {
         newTask.tillTime = convertToTime()
         do {
             try localStorageService.saveTask(with: newTask)
+            guard let dateComponents = convertToDateComponents() else { return }
+            notificationService.createAndSheduleNotification(title: newTask.name, description: newTask.description, matchDate: dateComponents)
         } catch let error {
             print(error.localizedDescription)
         }
+    }
+    
+    private func convertToDateComponents() -> DateComponents? { // need to redone bad logic
+        let calendar = Calendar.current
+        var components = DateComponents()
+        guard let date = newTask.tillDate else { return nil }
+        components.year = calendar.component(.year, from: date)
+        components.month = calendar.component(.month, from: date)
+        components.day = calendar.component(.day, from: date)
+        
+        guard let dateTime = newTask.tillTime else { return components }
+        components.hour = calendar.component(.hour, from: dateTime)
+        components.minute = calendar.component(.minute, from: dateTime)
+//        
+//        if let date = calendar.date(from: components),
+//           let newDate = calendar.date(byAdding: .hour, value: -1, to: date) {
+//            components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+//        }
+        
+        return components
     }
     
     private func convertToDate() -> Date? {
