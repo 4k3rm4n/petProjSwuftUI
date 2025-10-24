@@ -14,6 +14,7 @@ protocol RoundedTaskViewModel: ObservableObject, Identifiable {
     var taskStatus: TaskStatus { get set }
     var tillTime: String? { get set }
     var tillDate: String? { get set }
+    var isOverdue: Bool { get }
     
     func removeTask()
 }
@@ -52,6 +53,13 @@ struct RoundedTaskView<ViewModel>: View where ViewModel: RoundedTaskViewModel {
                         .font(.system(size: 16, weight: .medium))
                     
                     Spacer()
+                    
+                    if viewModel.isOverdue {
+                        Text("Overdue")
+                            .font(.system(size: 14)).bold()
+                            .foregroundStyle(.red)
+                    }
+                    
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 16)
