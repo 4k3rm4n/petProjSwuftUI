@@ -5,6 +5,12 @@
 //  Created by Bohdan Peretiatko on 25.09.2025.
 //
 
+//MARK: to do - add feature to mark task as completed -
+//MARK: to do - sort tasks by priority and date -
+//MARK: to do - add settings to allow user to set up push alerts settings -
+//MARK: to do - FIX ANIMATION WHILE CHOOSING THE OPTION IN PICKER ON HOME SCREEN VIEW -
+
+
 import SwiftUI
 import Combine
 
@@ -12,8 +18,9 @@ protocol HomeScreenViewModel: ObservableObject {
     var tasks: [Task] { get }
     var isTasksExist: Bool { get }
     var newTask: Task { get set }
+    var displayedTasksSetting: TaskStatusPickerHelper { get set }
     
-    func getTasksViewModels() -> [RoundedTaskViewModelImpl]
+    func getTasksViewModels(displayedTasksSetting: TaskStatusPickerHelper) -> [RoundedTaskViewModelImpl]
     func removeTask(with taskId: UUID)
 }
 
@@ -30,8 +37,16 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
             Color.white
                 .ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 24) {
                 MainScreenHeaderView()
+                
+                Picker("Choose displayed tasks", selection: $viewModel.displayedTasksSetting) {
+                    ForEach(TaskStatusPickerHelper.allCases, id: \.self) { status in
+                        Text(status.rawValue).tag(status)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 10)
                 
                 if viewModel.isTasksExist {
                     tasks
@@ -39,6 +54,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                     EmptyTaskView()
                 }
             }
+            
             
             VStack {
                 Spacer()
@@ -76,12 +92,10 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
     var tasks: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 24) {
-                ForEach(viewModel.getTasksViewModels()) { taskViewModel in
+                ForEach(viewModel.getTasksViewModels(displayedTasksSetting: viewModel.displayedTasksSetting)) { taskViewModel in
                     ZStack {
                         HStack(alignment: .center) {
                             Spacer()
-                            
-                            // MARK: todo remove to seperate folder
                             Button {
                                 withAnimation(.smooth) {
                                     viewModel.removeTask(with: taskViewModel.id)
@@ -100,7 +114,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                 }
             }
         }
-        .padding(.top, 24)
+        .animation(.smooth, value: viewModel.displayedTasksSetting)
     }
 }
 

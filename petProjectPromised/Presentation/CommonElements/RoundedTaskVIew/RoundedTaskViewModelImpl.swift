@@ -17,7 +17,6 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
     @Published var isOverdue: Bool = false
     
     private let localStorageService =  LocalStorageService()
-    private let dateOperationService = DateOperationService()
     
     init(from task: Task) {
         id = task.id
@@ -31,7 +30,7 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
         if let time = task.tillTime {
             tillTime = CustomFormatters.dateTime.string(from: time)
         }
-        guard let originalDate = dateOperationService.convertToDate(from: task.tillDate, time: task.tillTime) else { return }
+        guard let originalDate = DateOperationService.convertToDate(from: task.tillDate, time: task.tillTime) else { return }
         isOverdue = originalDate < Date()
     }
     

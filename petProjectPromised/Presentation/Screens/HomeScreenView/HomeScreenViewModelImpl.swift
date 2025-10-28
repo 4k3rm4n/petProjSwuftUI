@@ -14,6 +14,7 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
     @Published var tasks: [Task]
     @Published var isTasksExist: Bool = false
     @Published var newTask: Task = Task()
+    @Published var displayedTasksSetting: TaskStatusPickerHelper = .all
     
     private let notificationService = NotificationService()
     private let userDefaultsStorage = UserDefaultStorage.shared
@@ -34,10 +35,18 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
         notificationService.requestPermission()
     }
     
-    func getTasksViewModels() -> [RoundedTaskViewModelImpl] {
+    func getTasksViewModels(displayedTasksSetting: TaskStatusPickerHelper) -> [RoundedTaskViewModelImpl] {
         var viewModels: [RoundedTaskViewModelImpl] = []
-        for task in tasks {
-            viewModels.append(.init(from: task))
+        if displayedTasksSetting == .all {
+            for task in tasks {
+                viewModels.append(.init(from: task))
+            }
+        } else {
+            for task in tasks {
+                if task.status.rawValue == displayedTasksSetting.rawValue { /// -------------------
+                    viewModels.append(.init(from: task))
+                }
+            }
         }
         return viewModels
     }

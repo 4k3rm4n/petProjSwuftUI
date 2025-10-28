@@ -25,6 +25,15 @@ struct Task: Identifiable, Hashable, Codable {
         self.status = status
         self.priority = priority
     }
+    
+    mutating func setStatus() {
+        let originalDate = DateOperationService.convertToDate(from: tillDate, time: tillTime)
+        if let originalDate = originalDate {
+            status = originalDate < Date() ? .overdue : .active
+        } else {
+            status = .active
+        }
+    }
 }
 
 extension Task {

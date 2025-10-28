@@ -8,7 +8,7 @@
 import Foundation
 
 struct DateOperationService {
-    func convertToDate(from date: Date?, time: Date?) -> Date? {
+    static func convertToDate(from date: Date?, time: Date?) -> Date? {
         guard let date = date else { return nil }
         let calendar = Calendar.current
         

@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum TaskStatus: Codable {
-    case active
-    case completed
+enum TaskStatus: String, Codable { // HomeScreenViewModelImpl
+    case active = "Active"
+    case overdue = "Overdue"
+    case completed = "Completed"
 }

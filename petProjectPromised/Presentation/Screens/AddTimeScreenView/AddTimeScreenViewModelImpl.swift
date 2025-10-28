@@ -28,6 +28,7 @@ class AddTimeScreenViewModelImpl: AddTimeScreenViewModel {
     func saveTask() {
         newTask.tillDate = convertToDate()
         newTask.tillTime = convertToTime()
+        newTask.setStatus()
         do {
             try localStorageService.saveTask(with: newTask)
             guard let dateComponents = convertToDateComponents() else { return }
