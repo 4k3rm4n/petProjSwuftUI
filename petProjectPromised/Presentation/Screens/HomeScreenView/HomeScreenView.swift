@@ -15,19 +15,17 @@ import SwiftUI
 import Combine
 
 protocol HomeScreenViewModel: ObservableObject {
-    var tasks: [Task] { get }
     var isTasksExist: Bool { get }
     var newTask: Task { get set }
     var displayedTasksSetting: TaskStatusPickerHelper { get set }
+    var tasksViewModels: [RoundedTaskViewModelImpl] { get }
     
-    func getTasksViewModels(displayedTasksSetting: TaskStatusPickerHelper) -> [RoundedTaskViewModelImpl]
     func removeTask(with taskId: UUID)
 }
 
 
 struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
     @ObservedObject var viewModel: ViewModel
-    
     @State private var showAddTaskSheet: Bool = false
     @State private var showAddDateTimeScreen: Bool = false
     @State private var addTaskSheetHeight: CGFloat = .zero
@@ -92,7 +90,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
     var tasks: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 24) {
-                ForEach(viewModel.getTasksViewModels(displayedTasksSetting: viewModel.displayedTasksSetting)) { taskViewModel in
+                ForEach(viewModel.tasksViewModels, id: \.id) { taskViewModel in
                     ZStack {
                         HStack(alignment: .center) {
                             Spacer()
@@ -103,7 +101,7 @@ struct HomeScreenView<ViewModel>: View where ViewModel: HomeScreenViewModel {
                             } label: {
                                 Image(systemName: "trash")
                                     .resizable()
-                                    .frame(width: 50, height: 50)
+                                    .frame(width: 35, height: 35)
                                     .foregroundStyle(taskViewModel.taskPriority.color())
                             }
                         }

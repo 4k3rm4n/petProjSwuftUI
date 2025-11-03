@@ -11,10 +11,11 @@ import Combine
 //MARK: todo save tasks viewModels here mb?
 
 class HomeScreenViewModelImpl: HomeScreenViewModel {
-    @Published var tasks: [Task]
+    private var tasks = CurrentValueSubject<[Task], Never>([])
     @Published var isTasksExist: Bool = false
     @Published var newTask: Task = Task()
     @Published var displayedTasksSetting: TaskStatusPickerHelper = .all
+    @Published var tasksViewModels: [RoundedTaskViewModelImpl] = []
     
     private let notificationService = NotificationService()
     private let userDefaultsStorage = UserDefaultStorage.shared
@@ -22,31 +23,45 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
     private var cancellables: Set<AnyCancellable> = []
     
     init() {
-        tasks = userDefaultsStorage.tasks
         userDefaultsStorage
             .$tasks
             .sink { [weak self] in
                 self?.newTask = Task()
-                self?.tasks = $0
-                self?.isTasksExist = !$0.isEmpty
+                self?.tasks.send($0)
+            }
+            .store(in: &cancellables)
+        
+        tasks.eraseToAnyPublisher()
+            .map {
+                !$0.isEmpty
+            }
+            .assign(to: \.isTasksExist, on: self)
+            .store(in: &cancellables)
+        
+        $displayedTasksSetting
+            .combineLatest(tasks.eraseToAnyPublisher())
+            .sink { [weak self] in
+                guard let self else { return }
+                switch $0.0 {
+                case .all:
+                    tasksViewModels = getTasksViewModels()
+                case .completed:
+                    tasksViewModels = getTasksViewModels().filter { $0.taskStatus == .completed }
+                case .overdue:
+                    tasksViewModels = getTasksViewModels().filter { $0.taskStatus == .overdue }
+                case .active:
+                    tasksViewModels = getTasksViewModels().filter { $0.taskStatus == .active }
+                }
             }
             .store(in: &cancellables)
         
         notificationService.requestPermission()
     }
     
-    func getTasksViewModels(displayedTasksSetting: TaskStatusPickerHelper) -> [RoundedTaskViewModelImpl] {
+    private func getTasksViewModels() -> [RoundedTaskViewModelImpl] {
         var viewModels: [RoundedTaskViewModelImpl] = []
-        if displayedTasksSetting == .all {
-            for task in tasks {
-                viewModels.append(.init(from: task))
-            }
-        } else {
-            for task in tasks {
-                if task.status.rawValue == displayedTasksSetting.rawValue { /// -------------------
-                    viewModels.append(.init(from: task))
-                }
-            }
+        for task in tasks.value {
+            viewModels.append(.init(from: task))
         }
         return viewModels
     }
@@ -63,7 +78,7 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
 extension HomeScreenViewModelImpl {
     static var mock: HomeScreenViewModelImpl = {
         let viewModel = HomeScreenViewModelImpl()
-        viewModel.tasks = Task.samplelist
+        viewModel.tasks.send(Task.samplelist)
         return viewModel
     }()
 }

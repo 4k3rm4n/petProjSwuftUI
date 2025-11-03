@@ -14,7 +14,7 @@ struct NotificationService {
     func requestPermission() {
         notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { succes, error in
             if succes {
-                print("got")
+                
             } else if let error = error {
                 print(error.localizedDescription)
             }
