@@ -7,26 +7,24 @@
 
 import Foundation
 import Combine
-
-//MARK: todo save tasks viewModels here mb?
+import RealmSwift
 
 class HomeScreenViewModelImpl: HomeScreenViewModel {
-    private var tasks = CurrentValueSubject<[Task], Never>([])
+    private var tasks = CurrentValueSubject<[TaskDTO], Never>([])
     @Published var isTasksExist: Bool = false
-    @Published var newTask: Task = Task()
+    @Published var newTask: TaskDTO = TaskDTO()
     @Published var displayedTasksSetting: TaskStatusPickerHelper = .all
     @Published var tasksViewModels: [RoundedTaskViewModelImpl] = []
     
     private let notificationService = NotificationService()
-    private let userDefaultsStorage = UserDefaultStorage.shared
-    private let localStorageService =  LocalStorageService()
+    private let realmStorageService: RealmStorageServiceProtocol = RealmStorageService()
     private var cancellables: Set<AnyCancellable> = []
     
     init() {
-        userDefaultsStorage
-            .$tasks
+        realmStorageService.subscribeToTasks()
+            .map { $0.map { TaskDTO(fromObject: $0) }}
             .sink { [weak self] in
-                self?.newTask = Task()
+                self?.newTask = TaskDTO()
                 self?.tasks.send($0)
             }
             .store(in: &cancellables)
@@ -66,9 +64,9 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
         return viewModels
     }
     
-    func removeTask(with taskId: UUID) {
+    func removeTask(with taskId: ObjectId) {
         do {
-            try localStorageService.removeTask(with: taskId)
+            try realmStorageService.removeTask(with: taskId)
         } catch let error {
             print(error.localizedDescription)
         }
@@ -78,7 +76,7 @@ class HomeScreenViewModelImpl: HomeScreenViewModel {
 extension HomeScreenViewModelImpl {
     static var mock: HomeScreenViewModelImpl = {
         let viewModel = HomeScreenViewModelImpl()
-        viewModel.tasks.send(Task.samplelist)
+        viewModel.tasks.send(TaskDTO.samplelist)
         return viewModel
     }()
 }

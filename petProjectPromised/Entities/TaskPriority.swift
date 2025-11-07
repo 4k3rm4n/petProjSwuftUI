@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
+import RealmSwift
 
-enum TaskPriority: Int, Codable, CaseIterable, Hashable {
+enum TaskPriority: Int, PersistableEnum, CaseIterable, Hashable {
     case low = 1
     case medium
     case high

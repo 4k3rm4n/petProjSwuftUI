@@ -13,14 +13,15 @@
 
 import SwiftUI
 import Combine
+import RealmSwift
 
 protocol HomeScreenViewModel: ObservableObject {
     var isTasksExist: Bool { get }
-    var newTask: Task { get set }
+    var newTask: TaskDTO { get set }
     var displayedTasksSetting: TaskStatusPickerHelper { get set }
     var tasksViewModels: [RoundedTaskViewModelImpl] { get }
     
-    func removeTask(with taskId: UUID)
+    func removeTask(with taskId: ObjectId)
 }
 
 

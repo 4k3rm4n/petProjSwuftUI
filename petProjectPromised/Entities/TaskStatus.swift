@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import RealmSwift
 
-enum TaskStatus: Codable { // HomeScreenViewModelImpl
+enum TaskStatus: String, PersistableEnum { // HomeScreenViewModelImpl
     case active
     case overdue
     case completed

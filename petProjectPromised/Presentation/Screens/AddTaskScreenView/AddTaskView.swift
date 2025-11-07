@@ -17,7 +17,7 @@ struct AddTaskView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var showAddTaskSheet: Bool
     @Binding var showAddDateTimeScreen: Bool
-    @Binding var newTask: Task
+    @Binding var newTask: TaskDTO
     
     var body: some View {
             ZStack {
@@ -30,7 +30,7 @@ struct AddTaskView: View {
                         .padding(.horizontal, 4)
                         .cornerRadius(8)
                     
-                    TextField("Description", text: $newTask.description, axis: .vertical)
+                    TextField("Description", text: $newTask.taskDescription, axis: .vertical)
                         .autocorrectionDisabled()
                         .background(Color(.white))
                         .padding(.horizontal, 4)
@@ -66,5 +66,5 @@ struct AddTaskView: View {
 }
 
 #Preview {
-    AddTaskView(showAddTaskSheet: .constant(true), showAddDateTimeScreen: .constant(false), newTask: .constant(Task()))
+    AddTaskView(showAddTaskSheet: .constant(true), showAddDateTimeScreen: .constant(false), newTask: .constant(TaskDTO()))
 }

@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 protocol RoundedTaskViewModel: ObservableObject, Identifiable {
-    var id: UUID { get }
+    var id: ObjectId { get }
     var taskName: String { get }
     var taskPriority: TaskPriority { get }
     var taskStatus: TaskStatus { get set }

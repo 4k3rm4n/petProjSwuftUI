@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import RealmSwift
 
 class RoundedTaskViewModelImpl: RoundedTaskViewModel {
-    @Published var id: UUID
+    @Published var id: ObjectId
     @Published var taskName: String
     @Published var taskPriority: TaskPriority
     @Published var taskStatus: TaskStatus
@@ -16,9 +17,9 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
     @Published var tillTime: String?
     @Published var isOverdue: Bool = false
     
-    private let localStorageService =  LocalStorageService()
+    private let realmStorageService: RealmStorageServiceProtocol = RealmStorageService()
     
-    init(from task: Task) {
+    init(from task: TaskDTO) {
         id = task.id
         taskName = task.name
         taskPriority = task.priority
@@ -36,7 +37,7 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
     
     func removeTask() {
         do {
-            try localStorageService.removeTask(with: id)
+            try realmStorageService.removeTask(with: id)
         } catch let error {
             print(error.localizedDescription)
         }
@@ -47,5 +48,5 @@ class RoundedTaskViewModelImpl: RoundedTaskViewModel {
 
 
 extension RoundedTaskViewModelImpl {
-    static var mock = RoundedTaskViewModelImpl(from: Task.sapmle)
+    static var mock = RoundedTaskViewModelImpl(from: TaskDTO.sapmle)
 }

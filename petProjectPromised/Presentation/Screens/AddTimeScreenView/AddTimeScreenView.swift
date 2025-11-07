@@ -80,5 +80,5 @@ struct AddTimeScreenView<ViewModel>: View where ViewModel: AddTimeScreenViewMode
 }
 
 #Preview {
-    AddTimeScreenView(viewModel: AddTimeScreenViewModelImpl(from: Task()))
+    AddTimeScreenView(viewModel: AddTimeScreenViewModelImpl(from: TaskDTO()))
 }

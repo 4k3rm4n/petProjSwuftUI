@@ -13,12 +13,12 @@ class AddTimeScreenViewModelImpl: AddTimeScreenViewModel {
     @Published var isShowTimePicker: Bool
     @Published var taskSelectedTime: Date
     @Published var taskTillDate: YearMonthDay?
-    private var newTask: Task
+    private var newTask: TaskDTO
     
-    private let localStorageService: LocalStorageServiceProtocol = LocalStorageService()
+    private let realmStorageService: RealmStorageServiceProtocol = RealmStorageService()
     private let notificationService = NotificationService()
     
-    init(from newTask: Task) {
+    init(from newTask: TaskDTO) {
         isShowTimePicker = false
         taskSelectedTime = Date()
         taskTillDate = nil
@@ -30,9 +30,9 @@ class AddTimeScreenViewModelImpl: AddTimeScreenViewModel {
         newTask.tillTime = convertToTime()
         newTask.setStatus()
         do {
-            try localStorageService.saveTask(with: newTask)
+            try realmStorageService.saveOrUpdateTask(with: newTask.convertToObject())
             guard let dateComponents = convertToDateComponents() else { return }
-            notificationService.createAndSheduleNotification(title: newTask.name, description: newTask.description, matchDate: dateComponents)
+            notificationService.createAndSheduleNotification(title: newTask.name, description: newTask.taskDescription, matchDate: dateComponents)
         } catch let error {
             print(error.localizedDescription)
         }
